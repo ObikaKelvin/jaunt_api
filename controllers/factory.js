@@ -1,22 +1,32 @@
+const catchAsync = require('../utils/catchAsync');
+const ApiFeatures = require('../utils/ApiFeatures');
+const AppError = require('../utils/appError');
+
 exports.getDocuments = (Model, populateOption=null) => catchAsync(async(req, res, next) => {
-    let query = Model.find(req.customFilter);
+    try {
+        let query = Model.find(req.customFilter);
 
-    if(populateOption){
-        query = query.populate(populateOption);
+        if(populateOption){
+            query = query.populate(populateOption);
+        }
+
+        const documents = await new ApiFeatures(query, req)
+        .filterFields()
+        .paginate()
+        .sort()
+        .limitFields()
+        .query;
+
+        res.status(200).json({
+            status: 'success',
+            result: documents.length,
+            data: documents,
+        });
+    } 
+    
+    catch (error) {
+        console.log(error)
     }
-
-    const documents = await new ApiFeatures(query, req)
-    .filterFields()
-    .paginate()
-    .sort()
-    .limitFields()
-    .query;
-
-    res.status(200).json({
-        status: 'success',
-        result: documents.length,
-        data: documents,
-    });
 })
 
 exports.createDocument = Model => catchAsync(async (req, res, next) => {
@@ -55,7 +65,7 @@ exports.getDocument = (Model, populateOption) => catchAsync(async (req, res, nex
 
     const document = await query;
     if(!document){
-        return next(new AppException(404, `${key} not found`))
+        return next(new AppError(404, `${key} not found`))
     }
     res.status(200).json({
         status: 'success',
@@ -74,7 +84,7 @@ exports.updateDocument = Model => catchAsync(async (req, res, next) => {
     });
 
     if(!document){
-        return next(new AppException(404, `${key} not found`))
+        return next(new AppError(404, `${key} not found`))
     }
 
     res.status(200).json({
