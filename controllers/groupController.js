@@ -43,7 +43,7 @@ exports.createGroup = catchAsync(
 
         // check if group was created successfully
         if(!group) {
-            return next(new AppError("Could not create grop, please try again", 404));
+            return next(new AppError("Could not create group, please try again", 404));
         }
 
         // add user to the group and set as owner of the group
@@ -87,7 +87,7 @@ exports.deleteGroup = catchAsync(
 
         // check if group was created successfully
         if(!group) {
-            return next(new AppError("Could not create grop, please try again", 404));
+            return next(new AppError("Could not create group, please try again", 404));
         }
 
         // add user to the group and set as owner of the group
