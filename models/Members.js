@@ -10,6 +10,11 @@ const memberSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a user id'],
         ref: 'User'
+    },
+    isOwner: {
+        type: Boolean,
+        required: [true, 'Please specify the owner of this group'],
+        default: false
     }
 },{
     toJSON: { virtuals: true },

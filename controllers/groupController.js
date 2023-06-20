@@ -12,11 +12,55 @@ const {
 } = require('./factory');
 const GroupInvitation = require('../models/GroupInvitation');
 
-exports.createGroup = createDocument(Group);
 exports.getAllGroups = getDocuments(Group);
 exports.updateGroup = updateDocument(Group);
 exports.getGroup = getDocument(Group);
 exports.deleteGroup = deleteDocument(Group);
+
+
+exports.createGroup = catchAsync(
+    /**
+     * Allows users to create a group
+     * 
+     * @param {Express.Request} req 
+     * @param {Express.Request} res 
+     * @param {Express.NextFunction} next 
+     * 
+     */
+    async (req, res, next) => {
+        const { user } = req;
+
+        // generate the invitation code for the group
+        const inviteCode = '';
+
+        // create the new group
+        const group = await Group.create({
+            userId: user.id,
+            inviteCode
+        });
+
+        // check if group was created successfully
+        if(!group) {
+            return next(new AppError("Could not create grop, please try again", 404));
+        }
+
+        // add user to the group and set as owner of the group
+        const member = await Members.create({
+            groupId: group.id,
+            userId: user.id,
+            isOwner: true
+        })
+
+        if(!member) {
+            return next(new AppError("Sorry, we could not add you to this group at the moment, please try again", 404));
+        }
+
+        res.status(201).json({
+            success: true,
+            data: group
+        })
+    }
+);
 
 exports.joinGroup = catchAsync(
     /**
@@ -65,7 +109,7 @@ exports.joinGroup = catchAsync(
             return next(new AppError("Sorry, we could not add you to this group at the moment, please try again", 404));
         }
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             data: group
         })
