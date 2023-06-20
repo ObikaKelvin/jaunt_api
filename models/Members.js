@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const groupSchema = new mongoose.Schema({
+const memberSchema = new mongoose.Schema({
     groupId: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a group id'],
@@ -16,6 +16,6 @@ const groupSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-const Group = mongoose.model('Group', groupSchema);
+const Member = mongoose.model('Member', memberSchema);
 
-module.exports = Group;
+module.exports = Member;

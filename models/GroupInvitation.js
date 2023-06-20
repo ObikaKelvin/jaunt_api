@@ -9,14 +9,6 @@ const groupInvitationSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide a user id"],
     },
-    code: {
-        type: String,
-        required: [true, "Please provide a code"],
-    },
-    isUsed: {
-        type: Boolean,
-        default: false
-    },
     expiresAt: {
         type: Date,
         required: [true, "Please provide a date and time"]

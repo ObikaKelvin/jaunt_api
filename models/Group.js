@@ -17,6 +17,10 @@ const groupSchema = new mongoose.Schema({
     avatar: {
         type: String
     },
+    inviteCode: {
+        type: String,
+        required: [true, "Please provide a invite code"]
+    },
 },{
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
