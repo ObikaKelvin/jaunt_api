@@ -18,8 +18,8 @@ router.route('/')
 .get(getAllGroups)
 .post(createGroup)
 
-// router.route('/:id')
-// .get(getGroup)
+router.route('/:id')
+.get(getGroup)
 // .post(updateGroup)
 // .delete(deleteGroup)
 

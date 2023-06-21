@@ -32,6 +32,42 @@ exports.getAllGroups = catchAsync(
     }
 );
 
+exports.getGroup = catchAsync(
+    /**
+     * Allows users to get all their groups
+     * 
+     * @param {Express.Request} req 
+     * @param {Express.Request} res 
+     * @param {Express.NextFunction} next 
+     * 
+     */
+    async (req, res, next) => {
+        const { user } = req;
+        const { groupId } = req.params;
+
+        // get all user's groups
+        const isMember = await Member.find({
+            user: user.id,
+            group: groupId
+        })
+
+        if(!isMember) {
+            return next(new AppError("You don't belong to this group"), 401);
+        }
+
+        const group = await Group.findById(groupId);
+
+        if(!group) {
+            return next(new AppError("Group was not found"), 404);
+        }
+
+        res.status(200).json({
+            success: true,
+            group
+        })
+    }
+);
+
 exports.createGroup = catchAsync(
     /**
      * Allows users to create a group
