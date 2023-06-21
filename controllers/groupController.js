@@ -76,32 +76,17 @@ exports.deleteGroup = catchAsync(
     async (req, res, next) => {
         const { user } = req;
 
-        // generate the invitation code for the group
-        const inviteCode = '';
-
-        // create the new group
-        const group = await Group.create({
+        // delete the group
+        const group = await Group.findByIdAndDelete({
             userId: user.id,
-            inviteCode
         });
 
-        // check if group was created successfully
+        // check if group was deleted successfully
         if(!group) {
-            return next(new AppError("Could not create group, please try again", 404));
+            return next(new AppError("Could not find group, please try again", 404));
         }
 
-        // add user to the group and set as owner of the group
-        const member = await Members.create({
-            groupId: group.id,
-            userId: user.id,
-            isOwner: true
-        })
-
-        if(!member) {
-            return next(new AppError("Sorry, we could not add you to this group at the moment, please try again", 404));
-        }
-
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             data: group
         })
