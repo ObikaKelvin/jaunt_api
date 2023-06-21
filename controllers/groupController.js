@@ -10,7 +10,7 @@ const Member = require('../models/Members');
 
 exports.getAllGroups = catchAsync(
     /**
-     * Allows users to get all their group
+     * Allows users to get all their groups
      * 
      * @param {Express.Request} req 
      * @param {Express.Request} res 
@@ -20,15 +20,15 @@ exports.getAllGroups = catchAsync(
     async (req, res, next) => {
         const { user } = req;
 
-        // create the new group
-        const group = await Member.find({
+        // get all user's groups
+        const allGroups = await Member.find({
             user: user.id,
         }).populate({path: 'group', select: "name"})
 
 
         res.status(200).json({
             success: true,
-            data: group
+            allGroups
         })
     }
 );
