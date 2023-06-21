@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.ObjectId,
+        required: [true, "Please provide a user id"],
+    },
+    group: {
+        type: mongoose.Schema.ObjectId
+    },
     name: {
         type: String,
         required: [true, "Please provide a name"],
