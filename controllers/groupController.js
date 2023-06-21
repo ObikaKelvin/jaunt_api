@@ -30,6 +30,7 @@ exports.createGroup = catchAsync(
      * 
      */
     async (req, res, next) => {
+        const { name } = req.body;
         const { user } = req;
 
         // generate the invitation code for the group
@@ -37,6 +38,7 @@ exports.createGroup = catchAsync(
 
         // create the new group
         const group = await Group.create({
+            name,
             userId: user.id,
             inviteCode
         });
@@ -103,8 +105,10 @@ exports.joinGroup = catchAsync(
      * 
      */
     async (req, res, next) => {
-        const { inviteCode } = req.query;
+        const { inviteCode } = req.params;
         const { user } = req;
+
+        console.log(inviteCode)
 
         // find group using the invitation code
         const group = await Group.findOne({
@@ -117,24 +121,31 @@ exports.joinGroup = catchAsync(
         }
         
         // get the group invitation to the user
-        const groupInvite = await GroupInvitation.findOne({
-            groupId: group.id,
-            userId: user.id
-        });
+        // const groupInvite = await GroupInvitation.findOne({
+        //     groupId: group.id,
+        //     userId: user.id
+        // });
 
-        if(!groupInvite) {
-            return next(new AppError("Invalid invitation", 401));
-        }
+        // if(!groupInvite) {
+        //     return next(new AppError("Invalid invitation", 401));
+        // }
 
-        if(groupInvite.expiresAt < Date.now()) {
-            return next(new AppError("Sorry, this invitation has expired", 401));
-        }
+        // if(groupInvite.expiresAt < Date.now()) {
+        //     return next(new AppError("Sorry, this invitation has expired", 401));
+        // }
 
-        // add user to the group
-        const member = await Members.create({
-            groupId: group.id,
-            userId: user.id
-        })
+        const member =  await Members.findOneAndUpdate(
+            {userId: user.id}, 
+            { groupId: group.id, userId: user.id },
+            { new: true, upsert: true  }
+        )
+
+        console.log(member)
+
+        // const member = await Members.create({
+        //     groupId: group.id,
+        //     userId: user.id
+        // })
 
         if(!member) {
             return next(new AppError("Sorry, we could not add you to this group at the moment, please try again", 404));

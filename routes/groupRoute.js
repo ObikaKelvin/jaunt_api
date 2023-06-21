@@ -4,7 +4,8 @@ const {
     createGroup,
     getGroup,
     updateGroup,
-    deleteGroup
+    deleteGroup,
+    joinGroup
 } = require('../controllers/groupController');
 const ProtectRoute = require('../middlewares/ProtectRoute');
 
@@ -20,5 +21,7 @@ router.route('/:id')
 .get(getGroup)
 .post(updateGroup)
 .delete(deleteGroup)
+
+router.post('/:id/join/:inviteCode', joinGroup)
 
 module.exports = router;
