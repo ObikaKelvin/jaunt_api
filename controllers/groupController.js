@@ -5,7 +5,6 @@ const Members = require('../models/Members');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const User = require('../models/User');
 const Member = require('../models/Members');
 
 exports.getAllGroups = catchAsync(
@@ -146,6 +145,41 @@ exports.joinGroup = catchAsync(
         res.status(200).json({
             success: true,
             data: group
+        })
+    }
+);
+
+exports.leaveGroup = catchAsync(
+    /**
+     * Allows users to leave a group
+     * 
+     * @param {Express.Request} req 
+     * @param {Express.Request} res 
+     * @param {Express.NextFunction} next 
+     * 
+     */
+    async (req, res, next) => {
+        const { groupId } = req.params;
+        const { user } = req;
+
+        const group = await Group.findById(groupId);
+
+        // check if group exists
+        if(!group) {
+            return next(new AppError("Group not found", 404));
+        }
+
+        const member =  await Members.findOneAndDelete({
+            user: user.id
+        });
+
+        if(!member) {
+            return next(new AppError("Sorry, you can't leave this group at the moment, please try again", 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            group
         })
     }
 );
