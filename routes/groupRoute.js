@@ -6,8 +6,11 @@ const {
     updateGroup,
     deleteGroup
 } = require('../controllers/groupController');
+const ProtectRoute = require('../middlewares/ProtectRoute');
 
 const router = express.Router();
+
+router.use(ProtectRoute);
 
 router.route('/')
 .get(getAllGroups)
