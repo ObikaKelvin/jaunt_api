@@ -6,8 +6,10 @@ const router = require('./routes');
 
 const AppError = require('./utils/appError');
 
-
 const app = express();
+
+// Body parser, reading data from body into req.body
+app.use(express.json({ limit: '10kb' }));
 
 // test get route
 app.get('/', (req, res) => res.status(200).json({
