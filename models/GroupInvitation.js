@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const groupInvitationSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide a user id"],
     },
-    groupId: {
+    group: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide a user id"],
     },

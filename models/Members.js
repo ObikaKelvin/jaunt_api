@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const memberSchema = new mongoose.Schema({
-    groupId: {
+    group: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a group id'],
         ref: 'Group'
     },
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a user id'],
         ref: 'User'
@@ -19,6 +19,13 @@ const memberSchema = new mongoose.Schema({
 },{
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
+});
+
+memberSchema.virtual('groups', {   
+    ref: 'Group', // the collection/model name
+    foreignField: 'groupId',
+    localField: '_id',
+    justOne: true, // default is false
 });
 
 const Member = mongoose.model('Member', memberSchema);

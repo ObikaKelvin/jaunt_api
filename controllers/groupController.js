@@ -5,20 +5,33 @@ const Members = require('../models/Members');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const {
-    createDocument,
-    getDocuments,
-    updateDocument,
-    getDocument,
-    deleteDocument
-} = require('./factory');
-const GroupInvitation = require('../models/GroupInvitation');
+const User = require('../models/User');
+const Member = require('../models/Members');
 
-exports.getAllGroups = getDocuments(Group);
-exports.updateGroup = updateDocument(Group);
-exports.getGroup = getDocument(Group);
-exports.deleteGroup = deleteDocument(Group);
+exports.getAllGroups = catchAsync(
+    /**
+     * Allows users to get all their group
+     * 
+     * @param {Express.Request} req 
+     * @param {Express.Request} res 
+     * @param {Express.NextFunction} next 
+     * 
+     */
+    async (req, res, next) => {
+        const { user } = req;
 
+        // create the new group
+        const group = await Member.find({
+            user: user.id,
+        }).populate({path: 'group', select: "name"})
+
+
+        res.status(200).json({
+            success: true,
+            data: group
+        })
+    }
+);
 
 exports.createGroup = catchAsync(
     /**
@@ -39,7 +52,7 @@ exports.createGroup = catchAsync(
         // create the new group
         const group = await Group.create({
             name,
-            userId: user.id,
+            user: user.id,
             inviteCode
         });
 
@@ -51,7 +64,7 @@ exports.createGroup = catchAsync(
         // add user to the group and set as owner of the group
         const member = await Members.create({
             groupId: group.id,
-            userId: user.id,
+            user: user.id,
             isOwner: true
         })
 
@@ -80,7 +93,7 @@ exports.deleteGroup = catchAsync(
 
         // delete the group
         const group = await Group.findByIdAndDelete({
-            userId: user.id,
+            user: user.id,
         });
 
         // check if group was deleted successfully
@@ -119,33 +132,12 @@ exports.joinGroup = catchAsync(
         if(!group) {
             return next(new AppError("Group not found", 404));
         }
-        
-        // get the group invitation to the user
-        // const groupInvite = await GroupInvitation.findOne({
-        //     groupId: group.id,
-        //     userId: user.id
-        // });
-
-        // if(!groupInvite) {
-        //     return next(new AppError("Invalid invitation", 401));
-        // }
-
-        // if(groupInvite.expiresAt < Date.now()) {
-        //     return next(new AppError("Sorry, this invitation has expired", 401));
-        // }
 
         const member =  await Members.findOneAndUpdate(
-            {userId: user.id}, 
-            { groupId: group.id, userId: user.id },
+            {user: user.id}, 
+            { groupId: group.id, user: user.id },
             { new: true, upsert: true  }
         )
-
-        console.log(member)
-
-        // const member = await Members.create({
-        //     groupId: group.id,
-        //     userId: user.id
-        // })
 
         if(!member) {
             return next(new AppError("Sorry, we could not add you to this group at the moment, please try again", 404));

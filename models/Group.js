@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const groupSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide a user id"],
     },

@@ -20,8 +20,8 @@ exports.setPreference = catchAsync(
 
         // create or update user preference
         const preference =  await Preference.findOneAndUpdate(
-            {userId: user.id}, 
-            {...req.body, userId: user.id },
+            {user: user.id}, 
+            {...req.body, user: user.id },
             { new: true, upsert: true  }
         )
 
@@ -53,7 +53,7 @@ exports.getPreferences = catchAsync(
         // find user preferences
         const preference =  await Preference.find({
             id,
-            userId: user.id,
+            user: user.id,
         })
 
         res.status(200).json({
@@ -79,7 +79,7 @@ exports.getOnePreference = catchAsync(
         // find user preference
         const preference =  await Preference.findOne({
             id,
-            userId: user.id,
+            user: user.id,
         })
 
         // check if preference exists

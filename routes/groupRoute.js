@@ -17,10 +17,10 @@ router.route('/')
 .get(getAllGroups)
 .post(createGroup)
 
-router.route('/:id')
-.get(getGroup)
-.post(updateGroup)
-.delete(deleteGroup)
+// router.route('/:id')
+// .get(getGroup)
+// .post(updateGroup)
+// .delete(deleteGroup)
 
 router.post('/:id/join/:inviteCode', joinGroup)
 

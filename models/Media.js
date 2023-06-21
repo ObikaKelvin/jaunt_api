@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const mediaSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a user id'],
         ref: 'User'
     },
-    groupId: {
+    group: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a group id'],
         ref: 'Group'

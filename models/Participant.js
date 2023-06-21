@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const participantSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a user id'],
         ref: 'User'
     },
-    activityId: {
+    activity: {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Please provide a activity id'],
         ref: 'Activity'
