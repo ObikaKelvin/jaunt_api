@@ -25,7 +25,7 @@ exports.setPreference = catchAsync(
             { new: true, upsert: true  }
         )
 
-        // check if group was created successfully
+        // check if preference was set successfully
         if(!preference) {
             return next(new AppError("Could not set preference, please try again", 404));
         }
@@ -48,11 +48,9 @@ exports.getPreferences = catchAsync(
      */
     async (req, res, next) => {        
         const { user } = req;
-        const { id } = req.params;
 
         // find user preferences
-        const preference =  await Preference.find({
-            id,
+        const preference =  await Preference.findOne({
             user: user.id,
         })
 

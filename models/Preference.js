@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const preferenceSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
-        required: [true, "Please provide a user id"]
+        required: [true, "Please provide a user id"],
+        ref: 'User'
     },
     dietType: {
         type: String,
-        enum: ['vegetarian', 'vegan', 'pescatarian', 'none'],
+        enum: ['vegetarian', 'vegan', 'prescatarian', 'none'],
         required: [true, "Please provide a diet type"],
         lowerCase: true,
     },
@@ -16,8 +17,7 @@ const preferenceSchema = new mongoose.Schema({
         required: [true, "Please provide at least one medical condition"],
     },
     allergies: {
-        type: Array,
-        required: [true, "Please provide at least one allergy"],
+        type: Array
     },
     foodDishes: {
         type: Array,

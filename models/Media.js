@@ -8,8 +8,8 @@ const mediaSchema = new mongoose.Schema({
     },
     group: {
         type: mongoose.Schema.ObjectId,
-        required: [true, 'Please provide a group id'],
-        ref: 'Group'
+        required: [true, 'Please provide a activity id'],
+        ref: 'Activity'
     },
     mediaType: {
         type: String,

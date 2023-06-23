@@ -4,14 +4,16 @@ const activitySchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide a user id"],
-    },
-    group: {
-        type: mongoose.Schema.ObjectId
+        ref: 'User',
     },
     name: {
         type: String,
         required: [true, "Please provide a name"],
         lowerCase: true
+    },
+    inviteCode: {
+        type: String,
+        required: [true, "Please provide a invite code"]
     },
     board: [
         {
@@ -37,6 +39,13 @@ const activitySchema = new mongoose.Schema({
         type: Date,
         required: [true, "Please provide a date and time"]
     },
+    participants: [
+        {
+            type: mongoose.Schema.ObjectId,
+            required: [true, "Please provide a user id"],
+            ref: 'User',
+        }
+    ]
     
 },{
     toJSON: { virtuals: true },
