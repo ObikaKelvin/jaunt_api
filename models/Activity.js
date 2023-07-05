@@ -31,9 +31,25 @@ const activitySchema = new mongoose.Schema({
         type: String,
         lowerCase: true
     },
-    coordinates: {
-        type: Array,
-        required: [true, "Please provide the coordinates of the location"]
+    lat: {
+        type: String,
+        required: [true, "Please provide the latitude of the activity location"]
+    },
+    long: {
+        type: String,
+        required: [true, "Please provide the longitude of the activity location"]
+    },
+    address: {
+        type: String,
+        required: [true, "Please provide the address of the activity"]
+    },
+    city: {
+        type: String,
+        required: [true, "Please provide the city of the activity"]
+    },
+    province: {
+        type: String,
+        required: [true, "Please provide the province of the activity"]
     },
     startDateTime: {
         type: Date,

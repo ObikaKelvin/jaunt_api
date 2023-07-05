@@ -42,7 +42,7 @@ exports.createActivity = catchAsync(
      */
     async (req, res, next) => { 
         const { user } = req;
-        const { name, description, coordinates, startDateTime, contacts } = req.body;
+        const { name, description, long, lat, city, address, province, startDateTime, contacts } = req.body;
 
         const users = await User.find({
             'phoneNumber': { $in: contacts}
@@ -59,7 +59,7 @@ exports.createActivity = catchAsync(
 
         // create activity
         const activity =  await Activity.create({
-            user, name, description, coordinates, startDateTime, participants, inviteCode
+            user, name, description, long, lat, city, address, province, startDateTime, participants, inviteCode
         });
 
          // check if group was created successfully
