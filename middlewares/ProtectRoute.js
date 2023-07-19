@@ -6,16 +6,17 @@ const User = require('../models/User');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-module.exports = catchAsync(
+module.exports = 
     async (req, res, next) => {
-        // 1) Getting token and check of it's there
+        try {
+            // 1) Getting token and check of it's there
         let token;
         if (
             req.headers.authorization &&
             req.headers.authorization.startsWith('Bearer')
         ) {
             token = req.headers.authorization.split(' ')[1];
-        } 
+        }
     
         if (!token) {
         return next(
@@ -24,7 +25,10 @@ module.exports = catchAsync(
         }
     
         // 2) Verification token
+        console.log(process.env.JWT_SECRET)
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+        console.log(decoded)
+
     
         // 3) Check if user still exists
         const currentUser = await User.findById(decoded.id);
@@ -39,7 +43,9 @@ module.exports = catchAsync(
     
         // GRANT ACCESS TO PROTECTED ROUTE
         req.user = currentUser;
-        res.locals.user = currentUser;
         next();
+        } catch (error) {
+            console.log(error)
+        }
     }
-);
+;

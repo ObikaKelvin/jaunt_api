@@ -1,7 +1,39 @@
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-
 const app = require('./app');
+const wrap = require('./utils/middlewareWrapper');
+const ProtectRoute = require('./middlewares/ProtectRoute');
+const socketEvents = require("./constants/socketEvents");
+const { notificationSend, notificationRead } = require('./socket/handlers/notificationHandlers');
+const Websocket = require('./socket/Websocket');
+
+const httpServer = require("http").createServer(app);
+
+const io  = require('socket.io')(httpServer,{
+    cors: {
+      origin: '*',
+    }
+});
+
+io.of('/api/v1').use(wrap(ProtectRoute));
+
+io.of('/api/v1').on('connection', socket => {
+    const webSocket = new Websocket(socket);
+    webSocket.init();
+});
+
+global.io = io;
+global.socketUsers = [];
+
+// io.use(wrap(ProtectRoute));
+
+// io.on('connection', socket => {
+//     console.log(notificationSend(socket))
+
+//     socket.on(socketEvents.NOTIFICATION_SEND, notificationSend(socket))
+//     // socket.on(socketEvents.NOTIFICATION_READ, notificationRead(socket))
+
+// });
 
 // configure app to use .env file
 dotenv.config();
@@ -20,7 +52,7 @@ if(process.env.NODE_ENV === "production") {
 }
 
 // listen to desired port
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`App is running on ${PORT}`);
     console.log(DB)
 
