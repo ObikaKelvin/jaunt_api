@@ -47,7 +47,7 @@ exports.verifyContacts = catchAsync(
         users.forEach(user => {
             userObj[user.phoneNumber] = {
                 phoneNumber:  user.phoneNumber,
-                image:  user.image
+                picture:  user.picture
             };
         })
 
