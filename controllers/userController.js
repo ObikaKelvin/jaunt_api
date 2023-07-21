@@ -40,7 +40,7 @@ exports.verifyContacts = catchAsync(
 
         const users = await User.find({
             'phoneNumber': { $in: contacts}
-        }, {_id: 1,  phoneNumber: 1 });
+        }, {_id: 1,  phoneNumber: 1, picture: 1 });
 
         const userObj = {};
 
@@ -50,6 +50,8 @@ exports.verifyContacts = catchAsync(
                 picture:  user.picture
             };
         })
+
+        console.log(users)
 
         res.status(200).json({
             success: true,
