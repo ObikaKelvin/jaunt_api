@@ -18,12 +18,13 @@ class Websocket{
 
     init(){
         const userData = {
-            userId: this.user.id,
+            userId: this.user.phoneNumber,
             socketId: this.socket.id
         };
         global.socketUsers.push(userData)
-        this.socket.join(this.user.id);
+        this.socket.join(this.user.phoneNumber);
         console.log('connected to socket');
+        console.log(this.user);
         this.setUpEvents();
     }
 

@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+const { createCanvas, loadImage } = require('canvas')
+const canvas = createCanvas(200, 200)
+const ctx = canvas.getContext('2d')
 
 const User = require('../models/User');
 const catchAsync = require('../utils/catchAsync');
@@ -54,3 +57,19 @@ exports.login = catchAsync(async (req, res, next) => {
   // 3) If everything ok, send token to client
   createSendToken(user, 200, res);
 });
+
+exports.signInWithGoogle = catchAsync(async (req, res, next) => {
+    const { googleUser } = req.body;
+    const { email, name, id, picture } = googleUser;
+    console.log(req.body)
+    const phoneNumber = '6045544331'
+  
+    const currentUser = await User.findOneAndUpdate(
+        {googleId: id}, 
+        { email, name, picture, phoneNumber },
+        { new: true, upsert: true  }
+    )
+  
+    // 3) If everything ok, send token to client
+    createSendToken(currentUser, 200, res);
+  });

@@ -19,7 +19,7 @@ exports.getAllNotifications = catchAsync(
 
         // get all user's notifications
         const notifications = await Notification.find({
-            recipients: user._id
+            recipients: user.phoneNumber
         }).populate('sender')
 
 

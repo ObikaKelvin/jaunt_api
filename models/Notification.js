@@ -16,13 +16,10 @@ const notificationSchema = new mongoose.Schema({
         required: [true, "Please provide a type"],
         lowerCase: true,
     },
-    recipients: [
-        {
-            type: mongoose.Schema.ObjectId,
-            required: [true, "Please provide a recipient id"],
-            ref: 'User',
-        }
-    ],
+    recipients:{
+        type: Array,
+        required: [true, "Please provide a list of recipients"],
+    },
     status:  {
         type: String,
         enum: ['read', 'unread'],

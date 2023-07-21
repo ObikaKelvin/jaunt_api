@@ -14,7 +14,7 @@ exports.getMe = catchAsync(
     async (req, res, next) => { 
         const { user } = req;
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             user
         })
@@ -31,6 +31,7 @@ exports.verifyContacts = catchAsync(
      * 
      */
     async (req, res, next) => { 
+        console.log(req.body)
         const { contacts } = req.body;
 
         if(!contacts || contacts.length === 0) {
@@ -41,9 +42,18 @@ exports.verifyContacts = catchAsync(
             'phoneNumber': { $in: contacts}
         }, {_id: 1,  phoneNumber: 1 });
 
+        const userObj = {};
+
+        users.forEach(user => {
+            userObj[user.phoneNumber] = {
+                phoneNumber:  user.phoneNumber,
+                image:  user.image
+            };
+        })
+
         res.status(200).json({
             success: true,
-            users,
+            users: userObj,
             result: users.length
         })
     }
