@@ -66,9 +66,14 @@ exports.signInWithGoogle = catchAsync(async (req, res, next) => {
   
     const currentUser = await User.findOneAndUpdate(
         {googleId: id}, 
-        { email, name, picture, phoneNumber },
+        { email, name, picture },
         { new: true, upsert: true  }
     )
+
+    if(!currentUser.phoneNumber) {
+        currentUser.phoneNumber = phoneNumber;
+        await currentUser.save();
+    }
   
     // 3) If everything ok, send token to client
     createSendToken(currentUser, 200, res);
