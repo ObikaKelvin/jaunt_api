@@ -1,27 +1,30 @@
 const jwt = require('jsonwebtoken');
-const { createCanvas, loadImage } = require('canvas')
-const canvas = createCanvas(200, 200)
-const ctx = canvas.getContext('2d')
+const uuid = require('uuid');
 
 const User = require('../models/User');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const RefreshToken = require('../models/RefreshToken');
 
-const signToken = id => {
+const signAccessToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };  
 
-const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user._id);
-  
+const createSendToken = async (user, statusCode, res) => {
+  const accessToken = signAccessToken(user._id);
+  const refreshToken = await RefreshToken.create({
+    user: user._id,
+    token: uuid.v4()
+});
   // Remove password from output
   user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
-    token,
+    accessToken,
+    refreshToken: refreshToken.token,
     user
   });
 };
@@ -77,4 +80,35 @@ exports.signInWithGoogle = catchAsync(async (req, res, next) => {
   
     // 3) If everything ok, send token to client
     createSendToken(currentUser, 200, res);
-  });
+});
+
+exports.refreshToken = catchAsync(async (req, res, next) => {
+    const { refreshToken } = req.body;
+    if(!refreshToken){
+        return next(new AppError(400, 'Please provide a refresh token'));
+    }
+
+    const currentRefreshToken = await RefreshToken.findOne({
+        where: {
+            token: refreshToken,
+            revoked: false
+        }
+    });
+
+    if(!currentRefreshToken){
+        return next(new AppError(401, 'Unauthorized!!!, Please log in'));
+    }
+
+    const user = await User.findById(currentRefreshToken.user._id)
+
+    if(!user){
+        return next(new AppError(404, 'User not found'));
+    }
+
+    const accessToken = signAccessToken(user._id);
+
+    res.status(200).send({
+        status: "success",
+        accessToken
+    });
+})
