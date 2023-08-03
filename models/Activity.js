@@ -6,11 +6,12 @@ const activitySchema = new mongoose.Schema({
         required: [true, "Please provide a user id"],
         ref: 'User',
     },
-    name: {
+    activityName: {
         type: String,
         required: [true, "Please provide a name"],
         lowerCase: true
     },
+    eventName: String,
     inviteCode: {
         type: String,
         required: [true, "Please provide a invite code"]
@@ -22,7 +23,7 @@ const activitySchema = new mongoose.Schema({
     ],
     status: {
         type: String,
-        enum: ['pending', 'completed'],
+        enum: ['pending', 'completed', 'upcoming'],
         required: [true, "Please provide a status"],
         lowerCase: true,
         default: 'pending',
@@ -31,26 +32,20 @@ const activitySchema = new mongoose.Schema({
         type: String,
         lowerCase: true
     },
-    lat: {
-        type: String,
-        required: [true, "Please provide the latitude of the activity location"]
+    preferences: {
+        type: Array,
     },
-    long: {
+    userWouldLikeTo: {
         type: String,
-        required: [true, "Please provide the longitude of the activity location"]
+        enum: ['do something', 'eat something', 'both'],
+        default: "eat something",
+        lowerCase: true
     },
-    address: {
-        type: String,
-        required: [true, "Please provide the address of the activity"]
-    },
-    city: {
-        type: String,
-        required: [true, "Please provide the city of the activity"]
-    },
-    province: {
-        type: String,
-        required: [true, "Please provide the province of the activity"]
-    },
+    coordinates: Array,
+    address: String,
+    activityIcon: String,
+    tips: String,
+    budget: Number,
     startDateTime: {
         type: Date,
         required: [true, "Please provide a date and time"]

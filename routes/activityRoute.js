@@ -3,7 +3,9 @@ const {
     getAllActivities,
     createActivity,
     joinActivity,
-    leaveActivity
+    leaveActivity,
+    getOneActivity,
+    updateActivity
 } = require('../controllers/activityController');
 const ProtectRoute = require('../middlewares/ProtectRoute');
 
@@ -15,9 +17,9 @@ router.route('/')
 .get(getAllActivities)
 .post(createActivity)
 
-// router.route('/:id')
-// .get(getGroup)
-// .post(updateGroup)
+router.route('/:id')
+.get(getOneActivity)
+.patch(updateActivity)
 // .delete(deleteGroup)
 
 router.patch('/:activityId/join', joinActivity);
