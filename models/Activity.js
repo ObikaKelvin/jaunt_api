@@ -41,7 +41,8 @@ const activitySchema = new mongoose.Schema({
         default: "eat something",
         lowerCase: true
     },
-    coordinates: Array,
+    lat: String,
+    long: String,
     address: String,
     activityIcon: String,
     tips: String,

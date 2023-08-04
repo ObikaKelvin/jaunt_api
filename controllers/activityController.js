@@ -111,8 +111,8 @@ exports.updateActivity = catchAsync(
         const { user } = req;
         const { id } = req.params;
         
-        const { eventName, userWouldLikeTo, status, preferences, budget, tips, activityIcon, coordinates, address } = req.body;
-        const data = { eventName, userWouldLikeTo, status, preferences, budget, tips, activityIcon, coordinates, address };
+        const { eventName, userWouldLikeTo, status, preferences, budget, tips, activityIcon, lat, long, address } = req.body;
+        const data = { eventName, userWouldLikeTo, status, preferences, budget, tips, activityIcon, lat, long, address };
         console.log("================================")
         console.log(req.body)
 
