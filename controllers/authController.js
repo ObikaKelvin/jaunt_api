@@ -14,6 +14,7 @@ const signAccessToken = id => {
 
 const createSendToken = async (user, statusCode, res) => {
   const accessToken = signAccessToken(user._id);
+  const token = signAccessToken(user._id);
   const refreshToken = await RefreshToken.create({
     user: user._id,
     token: uuid.v4()
@@ -24,6 +25,7 @@ const createSendToken = async (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     accessToken,
+    token,
     refreshToken: refreshToken.token,
     user
   });
