@@ -45,7 +45,7 @@ const activitySchema = new mongoose.Schema({
     long: String,
     address: String,
     activityIcon: String,
-    tips: String,
+    tips: Array,
     budget: Number,
     startDateTime: {
         type: Date,
